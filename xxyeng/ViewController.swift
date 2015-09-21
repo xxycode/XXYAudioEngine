@@ -16,7 +16,7 @@ class ViewController: UIViewController,XXYAudioEngineDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        eng = XXYAudioEngine(url: "http://120.25.57.2:234//11.mp3", playInBackground: true, saveCache: true, cacheName: nil)
+        eng = XXYAudioEngine(url: "http://120.25.57.2:234/11.mp3", playInBackground: true, saveCache: true, cacheName: nil)
         eng!.delegate = self
         shapeLayer.frame = CGRectMake(20, 120, 40, 100)
         view.layer.addSublayer(shapeLayer)
