@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>C340F912-86F8-4B0C-BB8E-41CC5488363B</string>
+	<key>IDESourceControlProjectName</key>
+	<string>xxyeng</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>B23C2453A731E9170EB083F3424C95CFA279527B</key>
+		<string>https://github.com/xxycode/XXYAudioEngine.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>xxyeng.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>B23C2453A731E9170EB083F3424C95CFA279527B</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/xxycode/XXYAudioEngine.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>B23C2453A731E9170EB083F3424C95CFA279527B</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>B23C2453A731E9170EB083F3424C95CFA279527B</string>
+			<key>IDESourceControlWCCName</key>
+			<string>xxyeng</string>
+		</dict>
+	</array>
+</dict>
+</plist>

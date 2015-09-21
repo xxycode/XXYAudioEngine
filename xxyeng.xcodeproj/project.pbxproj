@@ -13,6 +13,7 @@
 		A9443F081BABC26200CE2958 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A9443F071BABC26200CE2958 /* Images.xcassets */; };
 		A9443F0B1BABC26200CE2958 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9443F091BABC26200CE2958 /* LaunchScreen.xib */; };
 		A9443F171BABC26200CE2958 /* xxyengTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9443F161BABC26200CE2958 /* xxyengTests.swift */; };
+		A9443F211BABC26D00CE2958 /* XXYAudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9443F201BABC26D00CE2958 /* XXYAudioEngine.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 		A9443F101BABC26200CE2958 /* xxyengTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = xxyengTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9443F151BABC26200CE2958 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A9443F161BABC26200CE2958 /* xxyengTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = xxyengTests.swift; sourceTree = "<group>"; };
+		A9443F201BABC26D00CE2958 /* XXYAudioEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XXYAudioEngine.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +81,7 @@
 			children = (
 				A9443F001BABC26200CE2958 /* AppDelegate.swift */,
 				A9443F021BABC26200CE2958 /* ViewController.swift */,
+				A9443F201BABC26D00CE2958 /* XXYAudioEngine.swift */,
 				A9443F041BABC26200CE2958 /* Main.storyboard */,
 				A9443F071BABC26200CE2958 /* Images.xcassets */,
 				A9443F091BABC26200CE2958 /* LaunchScreen.xib */,
@@ -214,6 +217,7 @@
 			files = (
 				A9443F031BABC26200CE2958 /* ViewController.swift in Sources */,
 				A9443F011BABC26200CE2958 /* AppDelegate.swift in Sources */,
+				A9443F211BABC26D00CE2958 /* XXYAudioEngine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,6 +345,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = xxyeng/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -351,6 +356,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = xxyeng/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -409,6 +415,7 @@
 				A9443F1C1BABC26200CE2958 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A9443F1D1BABC26200CE2958 /* Build configuration list for PBXNativeTarget "xxyengTests" */ = {
 			isa = XCConfigurationList;
@@ -417,6 +424,7 @@
 				A9443F1F1BABC26200CE2958 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
