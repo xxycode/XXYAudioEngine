@@ -45,6 +45,7 @@ class XXYAudioEngine: NSObject,NSURLSessionDataDelegate,AVAudioPlayerDelegate {
     private var cacheFileName = ""
     private var filePath = ""
     private var isPlayed = false
+    private var session:NSURLSession?
     static var folderName = "com.xxycode.xxyaudioengine"
     static var cacheFilePath:String{
         get{
@@ -52,7 +53,6 @@ class XXYAudioEngine: NSObject,NSURLSessionDataDelegate,AVAudioPlayerDelegate {
             return cacheDir!.stringByAppendingPathComponent(XXYAudioEngine.folderName)
         }
     }
-    private var outputStream:NSOutputStream?
     private var response:NSURLResponse?
     private var totalLength = Int64(0)
     private var totalLengthReadForFile = Int64(0)
@@ -61,6 +61,7 @@ class XXYAudioEngine: NSObject,NSURLSessionDataDelegate,AVAudioPlayerDelegate {
     private var timer:NSTimer?
     private var timerInterval = NSTimeInterval(0.1)
     private var downloadTask:NSURLSessionDataTask?
+    private var fileHandle:NSFileHandle?
     init(url:String,playInBackground:Bool,saveCache:Bool,cacheName:String?){
         super.init()
         self.url = NSURL(string: url)
@@ -144,21 +145,22 @@ class XXYAudioEngine: NSObject,NSURLSessionDataDelegate,AVAudioPlayerDelegate {
     //MARK: - PublicMethod
     //开始播放
     func play(){
-        var session:NSURLSession?
-        if (UIDevice.currentDevice().systemVersion as NSString).floatValue >= 8.0{
-            session = NSURLSession(configuration: NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier(XXYAudioEngine.folderName), delegate: self,
-                delegateQueue: NSOperationQueue())
-        }else{
-            session = NSURLSession(configuration: NSURLSessionConfiguration.backgroundSessionConfiguration(XXYAudioEngine.folderName), delegate: self,
-                delegateQueue: NSOperationQueue())
+        stop()
+        if session == nil{
+            if (UIDevice.currentDevice().systemVersion as NSString).floatValue >= 8.0{
+                session = NSURLSession(configuration: NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier(XXYAudioEngine.folderName), delegate: self,
+                    delegateQueue: NSOperationQueue())
+            }else{
+                session = NSURLSession(configuration: NSURLSessionConfiguration.backgroundSessionConfiguration(XXYAudioEngine.folderName), delegate: self,
+                    delegateQueue: NSOperationQueue())
+            }
         }
-        
-        let request = NSURLRequest(URL: url!, cachePolicy: .UseProtocolCachePolicy, timeoutInterval: 15)
-        if downloadTask != nil{
-            downloadTask?.cancel()
-            stop()
-            downloadTask = nil
+        if fileHandle != nil{
+            fileHandle?.closeFile()
         }
+        let request = NSMutableURLRequest(URL: url!, cachePolicy: .UseProtocolCachePolicy, timeoutInterval: 15)
+//        let range = "bytes=500"
+//        request.setValue(range, forHTTPHeaderField: "Range")
         downloadTask = session!.dataTaskWithRequest(request)
         downloadTask?.resume()
     }
@@ -186,8 +188,11 @@ class XXYAudioEngine: NSObject,NSURLSessionDataDelegate,AVAudioPlayerDelegate {
     //停止
     func stop(){
         playerState = .Stopped
+        player?.stop()
         downloadTask?.cancel()
+        downloadTask = nil
         timer?.invalidate()
+        timer = nil
     }
     //获取音频当前的平均分贝大小(-120 ~ 0),可用于绘制波形图
     func currentAveragePower() -> Float{
@@ -278,48 +283,49 @@ class XXYAudioEngine: NSObject,NSURLSessionDataDelegate,AVAudioPlayerDelegate {
         delegate?.audioPlayProgress?(self, progress: 1)
         playerState = .Ended
     }
+    func audioPlayerDecodeErrorDidOccur(player: AVAudioPlayer!, error: NSError!) {
+        println(error)
+    }
     //MARK: - URLSessionDelegate
     func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveResponse response: NSURLResponse, completionHandler: (NSURLSessionResponseDisposition) -> Void) {
-        completionHandler(.Allow)
+        
         self.response = response
         totalLength = response.expectedContentLength
         var suggestedFilename = response.suggestedFilename
-        var fileSuffix = "." + response.suggestedFilename!.componentsSeparatedByString(".").last!
+        var fileSuffix = ""
+        if response.suggestedFilename!.componentsSeparatedByString(".").last == nil{
+            fileSuffix = ""
+        }
+        fileSuffix = "." + response.suggestedFilename!.componentsSeparatedByString(".").last!
         fileFullPath = filePath.stringByAppendingPathComponent(cacheFileName) + fileSuffix
         println("文件保存路径：\(fileFullPath)")
         if NSFileManager.defaultManager().fileExistsAtPath(fileFullPath) == true{
             NSFileManager.defaultManager().removeItemAtPath(fileFullPath, error: nil)
         }
-        outputStream = NSOutputStream(toFileAtPath: fileFullPath, append: true)
-        outputStream?.open()
+        NSFileManager.defaultManager().createFileAtPath(fileFullPath, contents: nil, attributes: nil)
+        fileHandle = NSFileHandle(forWritingAtPath: fileFullPath)!
+        fileHandle?.seekToFileOffset(0)
         playerState = .Playing
+        completionHandler(.Allow)
     }
     
     func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveData data: NSData) {
         var length = data.length
-        while(true){
-            var totalWritten = 0
-            if outputStream?.hasSpaceAvailable == true{
-                var dataBuffer = UnsafePointer<UInt8>(data.bytes)
-                var numberOfWritten = 0
-                while(totalWritten < length){
-                    numberOfWritten = outputStream!.write(dataBuffer, maxLength: length)
-                    if numberOfWritten == -1{
-                        break;
-                    }
-                    totalWritten += numberOfWritten
-                }
-                totalLengthReadForFile += length
-                delegate?.audioFileDownloadProgress?(self, progress: CGFloat(totalLengthReadForFile)/CGFloat(totalLength))
-                if totalLengthReadForFile > sizeBuffer && playerState == .Playing{
-                    if isPlayed == false{
-                        delegate?.audioDidBeginPlay?(self)
-                        isPlayed = true
-                    }
-                    playFile()
-                }
-                break;
+        fileHandle?.writeData(data)
+        fileHandle?.seekToEndOfFile()
+        totalLengthReadForFile += length
+        println(totalLengthReadForFile)
+        if totalLengthReadForFile > sizeBuffer && playerState == .Playing{
+            if isPlayed == false{
+                delegate?.audioDidBeginPlay?(self)
+                isPlayed = true
             }
+            playFile()
+        }
+        delegate?.audioFileDownloadProgress?(self, progress: CGFloat(totalLengthReadForFile)/CGFloat(totalLength))
+        if totalLengthReadForFile == totalLength{
+            totalLengthReadForFile = 0
+            fileHandle?.closeFile()
         }
     }
 }
